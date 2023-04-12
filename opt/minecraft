@@ -39,8 +39,10 @@ else
   heap="4g"    # Default for other Dynos
 fi
 
+mc_java_opts=${MC_JAVA_OPTS:-"-Xmx${heap} -Xms${heap}"}
+
 echo "Starting: minecraft ${mc_port}"
-eval "screen -L -h 2048 -dmS minecraft java -Xmx${heap} -Xms${heap} -jar minecraft.jar nogui"
+eval "screen -L -h 2048 -dmS minecraft java ${mc_java_opts} -jar minecraft.jar nogui"
 main_pid=$!
 
 # Flush the logfile every second, and ensure that the logfile exists
