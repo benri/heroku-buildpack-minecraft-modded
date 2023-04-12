@@ -9,7 +9,7 @@ if [ -z "$NGROK_API_TOKEN" ]; then
 fi
 
 # Start the TCP tunnel
-ngrok_cmd="bin/ngrok tcp -authtoken $NGROK_API_TOKEN ${NGROK_OPTS} ${mc_port}"
+ngrok_cmd="bin/ngrok tcp ${mc_port} --authtoken $NGROK_API_TOKEN ${NGROK_OPTS}"
 echo "Starting ngrok..."
 eval "$ngrok_cmd"
 ngrok_pid=$!
