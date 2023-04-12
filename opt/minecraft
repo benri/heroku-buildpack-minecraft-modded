@@ -28,15 +28,15 @@ for f in whitelist banned-players banned-ips ops; do
   test ! -f $f.json && echo -n "[]" > $f.json
 done
 
-mem=$(free -b | awk 'NR==2{print $7}')
-if [[ $mem -gt 2147483648 ]]; then
-  heap="4g"    # If available memory is greater than 2GB, P-L
-elif [[ $mem -gt 1073741824 ]]; then
-  heap="2g"    # If available memory is greater than 1GB, P-M
-elif [[ $mem -gt 536870912 ]]; then
-  heap="768m"    # If available memory is greater than 512MB
+limit=$(ulimit -u)
+if [[ $limit -lt 512 ]]; then
+  heap="384m"  # Eco, Basic, 1X Dyno
+elif [[ $limit -lt 1024 ]]; then
+  heap="768m"  # 2X Dyno
+elif [[ $limit -lt 2560 ]]; then
+  heap="2g"    # PM Dyno
 else
-  heap="384m"  # If available memory is less than 512MB
+  heap="4g"    # Default for other Dynos
 fi
 
 echo "Starting: minecraft ${mc_port}"
