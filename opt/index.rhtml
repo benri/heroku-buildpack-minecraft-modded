@@ -1,4 +1,4 @@
-<% open('ngrok.log') do |f| %>
+<% File.open('ngrok.log', 'r') do |f| %>
   <% f.lines.select { |line| line.include?("URL:") }.each do |line| %>
     <b>Server available at:</b>
     <% if line.match(/tcp:\/\/(.+:[0-9]+) P/) %>
