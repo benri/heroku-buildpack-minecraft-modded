@@ -11,7 +11,7 @@ fi
 # Start the TCP tunnel
 ngrok_cmd="bin/ngrok tcp ${mc_port} --authtoken $NGROK_API_TOKEN ${NGROK_OPTS}"
 echo "Starting ngrok..."
-eval "$ngrok_cmd"
+eval "$ngrok_cmd &"
 ngrok_pid=$!
 
 # Do an inline sync first, then start the background job
@@ -28,18 +28,16 @@ for f in whitelist banned-players banned-ips ops; do
   test ! -f $f.json && echo -n "[]" > $f.json
 done
 
-limit=$(ulimit -u)
-case $limit in
-  512)   # 2X Dyno
-  heap="768m"
-  ;;
-  32768) # PX Dyno
-  heap="4g"
-  ;;
-  *)     # 1X Dyno
-  heap="384m"
-  ;;
-esac
+mem=$(free -b | awk 'NR==2{print $7}')
+if [[ $mem -gt 2147483648 ]]; then
+  heap="4g"    # If available memory is greater than 2GB, P-L
+elif [[ $mem -gt 1073741824 ]]; then
+  heap="2g"    # If available memory is greater than 1GB, P-M
+elif [[ $mem -gt 536870912 ]]; then
+  heap="768m"    # If available memory is greater than 512MB
+else
+  heap="384m"  # If available memory is less than 512MB
+fi
 
 echo "Starting: minecraft ${mc_port}"
 eval "screen -L -h 2048 -dmS minecraft java -Xmx${heap} -Xms${heap} -jar minecraft.jar nogui"
