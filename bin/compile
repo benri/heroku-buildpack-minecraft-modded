@@ -78,8 +78,7 @@ forge_url="$(cat $ETC_DIR/files.json | python -c "import json,sys;obj=json.load(
 
 echo -n "-----> Installing Forge ${forge_version}... "
 curl -o forge-installer.jar -s -L $forge_url
-mv forge-installer.jar $BUILD_DIR/forge-installer.jar
-java -jar $BUILD_DIR/forge-installer.jar --installServer $BUILD_DIR
+java -jar forge-installer.jar --installServer $BUILD_DIR
 echo "done"
 
 if [ -n "${MINECRAFT_EULA:-""}" ]; then
