@@ -73,6 +73,15 @@ curl -o minecraft.jar -s -L $minecraft_url
 mv minecraft.jar $BUILD_DIR/minecraft.jar
 echo "done"
 
+forge_version=${FORGE_VERSION:-"45.0.43"}
+forge_url="$(cat $ETC_DIR/files.json | python -c "import json,sys;obj=json.load(sys.stdin);print(obj[\"server\"][\"${minecraft_version}\"][\"forge\"][\"${forge_version}\"][\"url\"])")"
+
+echo -n "-----> Installing Forge ${forge_version}... "
+curl -o forge-installer.jar -s -L $forge_url
+mv forge-installer.jar $BUILD_DIR/forge-installer.jar
+java -jar forge-installer.jar --installServer
+echo "done"
+
 if [ -n "${MINECRAFT_EULA:-""}" ]; then
   echo -n "-----> Accepting Minecraft EULA... "
   echo "eula=true" >> $BUILD_DIR/eula.txt
