@@ -42,7 +42,7 @@ fi
 mc_java_opts=${MC_JAVA_OPTS:-"-Xmx${heap} -Xms${heap}"}
 
 echo "Starting: minecraft ${mc_port}"
-eval "screen -L -h 2048 -dmS run.sh ${mc_java_opts} nogui"
+eval "screen -L -h 2048 -dmS java -jar fabric-server.jar ${mc_java_opts} nogui"
 main_pid=$!
 
 # Flush the logfile every second, and ensure that the logfile exists

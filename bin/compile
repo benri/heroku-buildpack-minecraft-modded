@@ -73,12 +73,23 @@ curl -o minecraft.jar -s -L $minecraft_url
 mv minecraft.jar $BUILD_DIR/minecraft.jar
 echo "done"
 
-forge_version=${FORGE_VERSION:-"45.0.43"}
-forge_url="$(cat $ETC_DIR/files.json | python -c "import json,sys;obj=json.load(sys.stdin);print(obj[\"server\"][\"${minecraft_version}\"][\"forge\"][\"${forge_version}\"][\"url\"])")"
+# forge_version=${FORGE_VERSION:-"45.0.43"}
+# forge_url="$(cat $ETC_DIR/files.json | python -c "import json,sys;obj=json.load(sys.stdin);print(obj[\"server\"][\"${minecraft_version}\"][\"forge\"][\"${forge_version}\"][\"url\"])")"
 
-echo -n "-----> Installing Forge ${forge_version}... "
-curl -o forge-installer.jar -s -L $forge_url
-java -jar forge-installer.jar --installServer $BUILD_DIR
+# echo -n "-----> Installing Forge ${forge_version}... "
+# curl -o forge-installer.jar -s -L $forge_url
+# java -jar forge-installer.jar --installServer $BUILD_DIR
+# echo "done"
+
+echo -n "-----> Installing Fabric Server ${minecraft_version}... "
+curl -o fabric-server.jar -s -L https://meta.fabricmc.net/v2/versions/loader/1.19.4/0.14.19/0.11.2/server/jar
+mv fabric-server.jar $BUILD_DIR/fabric-server.jar
+echo "done"
+
+echo -n "-----> Installing Fabric API Jar ... "
+curl -o fabric-api.jar -s -L "https://github.com/FabricMC/fabric/releases/download/0.78.0%2B1.19.4/fabric-api-0.78.0+1.19.4.jar"
+mkdir -p $BUILD_DIR/mods
+mv fabric-api.jar $BUILD_DIR/mods/fabric-api.jar
 echo "done"
 
 if [ -n "${MINECRAFT_EULA:-""}" ]; then
